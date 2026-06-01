@@ -76,65 +76,12 @@ num → digit {digit}
 
 ### Диаграмма лексера
 
-```text
-                    ┌─────────────┐
-                    │    START    │
-                    └──────┬──────┘
-           ┌───────────────┼───────────────┬──────────────┐
-           │               │               │              │
-      digit│          letter│         + - * / %│      ( )   │  other
-           ▼               ▼               ▼              ▼      ▼
-      ┌─────────┐    ┌─────────┐    ┌─────────┐   ┌─────────┐ ┌──────────┐
-      │   NUM   │    │   ID    │    │   OP    │   │  LPAREN │ │ LEX_ERROR│
-      │ digit*  │    │letter   │    │         │   │  RPAREN │ └──────────┘
-      └────┬────┘    │{l|d}*   │    └─────────┘   └─────────┘
-           │         └─────────┘
-     letter│
-           ▼
-      ┌──────────┐
-      │ LEX_ERROR│  (1abc — id с цифры)
-      └──────────┘
+![Диаграмма лексера](screenshots/12.png)
 
-      whitespace → пропуск, возврат в START
-```
 
 ### Схема рекурсивного спуска для парсера
 
-```text
-parse:
-  E
-  expect EOF
-
-E:
-  T
-  A
-
-A:
-  if '+' or '-':
-     consume op
-     T
-     emit quad(op, left, right, tN)
-     A
-  else ε
-
-T:
-  F
-  B
-
-B:
-  if '*' or '/' or '%':
-     consume op
-     F
-     emit quad(op, left, right, tN)
-     B
-  else ε
-
-F:
-  num  → return value
-  id   → return value
-  '('  → E, expect ')', return inner
-  else → syntax error
-```
+![Схема рекурсивного спуска для парсера](screenshots/13.png)
 
 ### Скриншоты: лексер и парсер
 
